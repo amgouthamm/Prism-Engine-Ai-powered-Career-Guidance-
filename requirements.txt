@@ -1,0 +1,5 @@
+flask
+scikit-learn
+numpy
+requests
+python-dotenv

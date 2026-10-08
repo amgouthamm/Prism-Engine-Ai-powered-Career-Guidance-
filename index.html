@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRISM Engine: find the right course, in the right state</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;600&display=swap">
+<style>
+:root{--bg:#fde6cc;--ink:#3b2316;--mute:#7a5a47;--card:#fffaf1;--line:#ecc9a4;--pri:#0e7c7b;--ok:#17803d;--warn:#b45309;--bad:#b42343}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#fff1de,#fde0c0 55%,#fbd0aa) fixed;color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
+h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0}
+header{padding:28px 20px 8px;max-width:1100px;margin:auto}
+h1{font-size:clamp(28px,5vw,44px);letter-spacing:-.02em}
+header p{margin:6px 0 0;color:var(--mute);max-width:60ch}
+.bar{height:6px;margin-top:18px;border-radius:3px;background:linear-gradient(90deg,#e5484d,#f5a623,#f2e03a,#30a46c,#3aa0ff,#3446c9,#8e4ec6)}
+main{max-width:1100px;margin:auto;padding:12px 20px 60px}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+h2{font-size:20px;margin-bottom:12px}
+.sub{display:grid;grid-template-columns:1.3fr .7fr 1fr 1.4fr 30px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.sub.head{color:var(--mute);font-size:13px;border-bottom:2px solid var(--line)}
+@media(max-width:560px){.sub{grid-template-columns:1fr 1fr}.sub.head{display:none}}
+input,select{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);width:100%}
+input[type=range]{padding:0}
+:focus-visible{outline:3px solid var(--pri);outline-offset:1px}
+label{display:block;font-weight:600;margin:12px 0 4px;font-size:14px}
+small{color:var(--mute)}
+.total{margin-top:12px;padding:10px;border-radius:6px;background:#fbe3b8;font-weight:600}
+button{font:inherit;font-weight:600;border:0;border-radius:8px;padding:13px 22px;background:var(--pri);color:#fff;cursor:pointer;margin-top:18px;width:100%}
+button:hover{background:#0a5f5e}
+#banner{font-size:13px;color:var(--mute);margin-top:10px}
+#banner.demo{color:var(--warn)}
+#out{margin-top:22px}
+.spec{display:flex;gap:6px;align-items:flex-end;height:130px;margin:6px 0 16px}
+.band{flex:1;border-radius:6px 6px 0 0;background:hsl(var(--h) 70% 52%);position:relative;min-height:22px;color:#fff;font-size:12px;text-align:center;padding-top:3px}
+.band i{position:absolute;top:100%;left:0;right:0;color:var(--mute);font-style:normal;margin-top:4px;font-size:11px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:34px 0 12px}
+.tab{width:auto;margin:0;padding:8px 14px;background:#fff;color:var(--ink);border:1px solid var(--line)}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tab:hover{background:#dfe6f2}.tab.on:hover{background:var(--ink)}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:780px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--mute)}
+tr.blocked td,tr.financial td{opacity:.62}
+.meter{height:8px;background:#f1d9bd;border-radius:4px;width:110px}.meter b{display:block;height:100%;border-radius:4px;background:var(--pri)}
+.chip{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;margin:2px 4px 0 0;border:1px solid var(--line)}
+.chip.ok{color:var(--ok);border-color:var(--ok)}.chip.warn{color:var(--warn);border-color:var(--warn)}.chip.bad{color:var(--bad);border-color:var(--bad)}
+.err{color:var(--bad);font-weight:600}
+section{box-shadow:0 3px 0 #ecc9a4}
+select{cursor:pointer;font-weight:600;border-width:2px}
+input[type=number]{border:2px solid #e4b98c}
+input[type=range]{accent-color:#e4572e}
+.c-teal{background:#d4eee8;border-color:#0e7c7b}
+.c-gold{background:#fbe3a6;border-color:#c98a00}
+.sk0{background:#efdfd0;border-color:#b79a82}.sk1{background:#fbe3a6;border-color:#c98a00}.sk2{background:#cdeae3;border-color:#0e7c7b}.sk3{background:#bfe5c9;border-color:#17803d}
+.tab{border:2px solid var(--t);color:var(--t);background:#fffaf1;font-weight:600}
+.tab:hover{background:#fff3df}
+.tab.on{background:var(--t);color:#fff;border-color:var(--t)}
+.tab.on:hover{background:var(--t)}
+.risk{margin-top:26px;border-radius:10px;padding:14px 18px;border:2px solid var(--rc);background:var(--rb)}
+.risk h2{font-size:19px;margin-bottom:2px}.risk ul{margin:8px 0;padding-left:20px}.risk p{margin:0}
+</style>
+</head>
+<body>
+<header>
+  <h1>PRISM Engine</h1>
+  <p>Enter the student's marks and the family's budget. You get the best-matching courses in each state, with your preferred state first.</p>
+  <div class="bar"></div>
+</header>
+<main>
+  <div class="grid">
+    <section>
+      <h2>Student profile</h2>
+      <div class="sub head"><span>Subject</span><span>Mark /100</span><span>Skill level</span><span>Interest /100</span><span></span></div>
+      <div id="subjects"></div>
+    </section>
+    <section>
+      <h2>Parent and preferences</h2>
+      <label for="budget">Approximate budget (₹ lakh)</label><input id="budget" type="number" min="0" step="0.5" value="10">
+      <label for="loan">Loan you are willing to take (₹ lakh)</label><input id="loan" type="number" min="0" step="0.5" value="5">
+      <div class="total" id="total"></div>
+      <label for="ss">State the student most wants to study in</label><select id="ss" class="c-teal"></select>
+      <label for="ps">State the parents prefer</label><select id="ps" class="c-teal"></select>
+      <label for="sp">Student's preferred course</label><select id="sp" class="c-gold"></select>
+      <label for="pp">Parents' preferred course</label><select id="pp" class="c-gold"></select>
+      <small>If both pick the same course, it moves up one place.</small>
+      <button id="go">Find courses</button>
+      <div id="banner"></div>
+    </section>
+  </div>
+  <div id="out" aria-live="polite"></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const NAMES={maths:"Mathematics",physics:"Physics",chemistry:"Chemistry",biology:"Biology",cs:"Computer Science",humanities:"Humanities",commerce:"Commerce"};
+const SK=["None","Basic","Good","Expert"];
+const TC={"Kerala":"#1f7f73","Karnataka":"#c23a52","Tamil Nadu":"#a86f00","Telangana":"#6f45a0","Maharashtra":"#d4501f","Andhra Pradesh":"#2b7a3d"};
+let DATA,active=0;
+
+$("subjects").innerHTML=Object.keys(NAMES).map(s=>`<div class="sub"><span>${NAMES[s]}</span>
+<input id="m_${s}" type="number" min="0" max="100" value="70" aria-label="${NAMES[s]} mark">
+<select id="k_${s}" class="sk1" onchange="this.className='sk'+this.value" aria-label="${NAMES[s]} skill">${SK.map((t,i)=>`<option value="${i}"${i==1?" selected":""}>${i} - ${t}</option>`).join("")}</select>
+<input id="i_${s}" type="range" min="0" max="100" value="50" aria-label="${NAMES[s]} interest" oninput="this.nextElementSibling.textContent=this.value"><output>50</output></div>`).join("");
+
+const opts=(a,blank)=>(blank?`<option value="">${blank}</option>`:"")+a.map(x=>`<option>${x}</option>`).join("");
+fetch("/api/meta").then(r=>r.json()).then(m=>{
+  $("ss").innerHTML=opts(m.states);$("ps").innerHTML=opts(m.states);
+  $("sp").innerHTML=opts(m.courses,"Not chosen");$("pp").innerHTML=opts(m.courses,"Not chosen");
+  const b=$("banner");b.className=m.source==="demo"?"demo":"";
+  b.textContent=m.source==="demo"?"Running on demo data, not your Supabase table. "+m.notes[0]
+    :`Model trained on ${m.rows} Supabase records (holdout accuracy ${(m.accuracy*100).toFixed(1)}%).`;
+}).catch(()=>{$("banner").textContent="Cannot reach the backend. Start it with: python app.py"});
+
+const upd=()=>$("total").textContent=`Total budget: ₹${(+$("budget").value||0)+(+$("loan").value||0)} lakh`;
+$("budget").oninput=$("loan").oninput=upd;upd();
+
+$("go").onclick=async()=>{
+  const subjects={};Object.keys(NAMES).forEach(s=>subjects[s]={mark:+$("m_"+s).value,skill:+$("k_"+s).value,interest:+$("i_"+s).value});
+  const body={subjects,budget:+$("budget").value||0,loan:+$("loan").value||0,student_state:$("ss").value,parent_state:$("ps").value,sp:$("sp").value,pp:$("pp").value};
+  $("out").innerHTML="Working it out...";
+  try{
+    const r=await fetch("/api/recommend",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const t=await r.text();let j=null;try{j=JSON.parse(t)}catch(_){}
+    if(!j||!r.ok){$("out").innerHTML=`<p class="err">${j&&j.error?j.error:`The server answered with status ${r.status} instead of results. Look at the terminal where app.py is running for the red error text.`}</p>`;return}
+    DATA=j;active=0;render();$("out").scrollIntoView({behavior:"smooth"});
+  }catch(e){$("out").innerHTML=`<p class="err">Cannot reach the backend. The page address must be http://localhost:5000 (yours is ${location.protocol==="file:"?"a local file":location.origin}) and python app.py must be running.</p>`}
+};
+
+function render(){
+  const d=DATA,s=d.states[active];
+  const bands=Object.keys(NAMES).map((k,i)=>`<div class="band" style="--h:${i*50};height:${Math.max(d.composite[k],18)}%">${d.composite[k]}<i>${NAMES[k].split(" ")[0]}</i></div>`).join("");
+  const note=d.match?"Student and parents chose the same course, so it moved up one place.":
+    d.conflict>0?`Student and parents chose different courses (conflict index ${d.conflict}).`:"";
+  const picks=d.picks.length?`<h2 style="margin-top:34px">Best matches across all states</h2><div class="wrap"><table><thead><tr><th>Course</th><th>State</th><th>4-year fees</th><th>Median salary</th><th>Growth a year</th></tr></thead><tbody>${d.picks.map(p=>`<tr><td><b>${p.course}</b></td><td>${p.state}</td><td>₹${p.fee_min} to ${p.fee_max} L</td><td>₹${p.salary} LPA</td><td>${p.growth}%</td></tr>`).join("")}</tbody></table></div>`:`<p class="err">No course fits this total budget. Increase the budget or loan to see matches.</p>`;
+  const rk=d.risk,RC={Low:["#17803d","#e3f4e0"],Moderate:["#a85a08","#fdecc4"],High:["#b42343","#fbdde0"]}[rk.level];
+  const risk=`<div class="risk" style="--rc:${RC[0]};--rb:${RC[1]}"><h2>Parent risk factor: <span style="color:${RC[0]}">${rk.level}</span></h2><small>How exposed the family is to loan and fee pressure.</small><ul>${rk.lines.map(l=>`<li>${l}</li>`).join("")}</ul><p><b>${rk.advice}</b></p></div>`;
+  const rows=s.rows.map(r=>{
+    const st=r.status==="ok"?"":`<span class="chip ${r.status==="financial"?"bad":"warn"}">${r.status==="financial"?"Financial instability":"Out of budget here"}</span>`;
+    return `<tr class="${r.status}"><td>${r.rank}</td><td><b>${r.course}</b><br>${r.boosted?'<span class="chip ok">Both chose this</span>':""}${r.boost>0?'<span class="chip ok">Favoured in this state</span>':""}
+      ${r.eligible?"":'<span class="chip warn">Below cutoff</span>'}${r.gaps.map(g=>`<span class="chip warn">Gap: ${NAMES[g]}</span>`).join("")}${st}
+      ${r.note?`<br><small>${r.note}</small>`:""}</td>
+      <td><div class="meter"><b style="width:${r.score}%"></b></div><small>${r.score}</small></td>
+      <td>₹${r.fee_min} to ${r.fee_max} L</td><td>₹${r.salary} LPA</td><td>${r.growth}%</td></tr>`}).join("");
+  $("out").innerHTML=`<section><h2>Subject strength (mark, skill, interest combined)</h2><div class="spec">${bands}</div>
+    <p style="margin-top:30px"><b>Total budget: ₹${d.total_budget} lakh.</b> ${note}</p>
+    ${risk}${picks}<div class="tabs" role="tablist">${d.states.map((x,i)=>`<button class="tab${i==active?" on":""}" style="--t:${TC[x.state]}" role="tab" onclick="active=${i};render()">${x.state}${x.preferred?" (preferred)":""}</button>`).join("")}</div>
+    <div class="wrap"><table><thead><tr><th>#</th><th>Course</th><th>Match</th><th>4-year fees</th><th>Median salary</th><th>Growth a year</th></tr></thead><tbody>${rows}</tbody></table></div><p><small>Median starting salary and yearly growth come from ${d.market_source}. Fees are 4-year totals.</small></p></section>`;
+}
+</script>
+</body>
+</html>
